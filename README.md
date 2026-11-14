@@ -5,3 +5,4 @@
 | 資料夾 | 文章 | 技術 |
 | --- | --- | --- |
 | [cors](./cors) | CORS 到底在擋什麼？Vue 3 + NestJS 跨來源 Cookie 實作筆記 | Vue 3、NestJS |
+| [xss](./xss) | XSS 到底怎麼發生？從瀏覽器執行到 Angular 防護 | 純 HTML、JavaScript、Express + EJS |

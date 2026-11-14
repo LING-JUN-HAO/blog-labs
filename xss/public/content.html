@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>從 HTML 內容進行 XSS 攻擊</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; }
+    pre { background: #f4f4f4; padding: .75rem; white-space: pre-wrap; word-break: break-all; }
+    #content { border: 2px dashed #999; padding: 1rem; }
+  </style>
+</head>
+<body>
+  <p><a href="./">← 回目錄</a></p>
+  <h1>從 HTML 內容進行 XSS 攻擊</h1>
+
+  <ul>
+    <li>正常值：<a href="?content=%3Cb%3EHello%3C%2Fb%3E">&lt;b&gt;Hello&lt;/b&gt;</a></li>
+    <li>script 標籤（不會執行）：<a href="?content=%3Cscript%3Ealert%281%29%3C%2Fscript%3E">&lt;script&gt;alert(1)&lt;/script&gt;</a></li>
+    <li>img onerror：<a href="?content=%3Cimg%20src%3Dx%20onerror%3Dalert%281%29%3E">&lt;img src=x onerror=alert(1)&gt;</a></li>
+  </ul>
+
+  <div id="content"></div>
+
+  <h2>產生出來的 HTML</h2>
+  <pre id="output"></pre>
+
+  <script nonce="demo">
+    const content = new URLSearchParams(location.search).get('content');
+
+    document.querySelector('#content').innerHTML = content;
+
+    // 把結果原樣印出來對照（textContent 不會被當成 HTML 解析）
+    document.querySelector('#output').textContent =
+      document.querySelector('#content').innerHTML;
+  </script>
+</body>
+</html>

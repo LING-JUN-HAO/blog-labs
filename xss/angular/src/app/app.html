@@ -1,0 +1,22 @@
+<h1>Angular 的 XSS 防護</h1>
+
+<p>四個區塊都使用 <code>app.ts</code> 裡同一段 <code>content</code>。</p>
+
+<h2>模板插值只會顯示文字</h2>
+<pre ngNonBindable>&lt;div&gt;{{ content }}&lt;/div&gt;</pre>
+<div class="box">{{ content }}</div>
+
+<h2>[innerHTML] 會先清理內容</h2>
+<pre>&lt;div [innerHTML]="content"&gt;&lt;/div&gt;</pre>
+<div class="box" [innerHTML]="content"></div>
+<p>Hello 會變粗體，但 <code>onerror</code> 被拿掉，Console 會出現 sanitizing 的警告。</p>
+
+<h2>[href] 會清理危險網址</h2>
+<pre>&lt;a [href]="dangerousUrl"&gt;查看內容&lt;/a&gt;</pre>
+<div class="box"><a [href]="dangerousUrl">查看內容</a></div>
+<p>用 DevTools 看元素，<code>href</code> 會是 <code>unsafe:javascript:alert(1)</code>，點了不會跳 alert。</p>
+
+<h2>bypassSecurityTrustHtml 是繞過保護</h2>
+<pre>&lt;div [innerHTML]="trustedContent()"&gt;&lt;/div&gt;</pre>
+<button type="button" (click)="showBypass.set(true)" [disabled]="showBypass()">渲染繞過防護的內容</button>
+<div class="box" [innerHTML]="trustedContent()"></div>

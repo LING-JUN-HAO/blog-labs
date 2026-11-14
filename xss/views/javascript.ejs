@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>從 JavaScript 程式碼進行 XSS 攻擊</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; }
+    pre { background: #f4f4f4; padding: .75rem; white-space: pre-wrap; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <p><a href="./">← 回目錄</a></p>
+  <h1>從 JavaScript 程式碼進行 XSS 攻擊</h1>
+
+  <ul>
+    <li>正常值：<a href="?name=Antonio">Antonio</a></li>
+    <li>攻擊：<a href="?name=%27%3B%20alert%281%29%3B%20%2F%2F">&#x27;; alert(1); //</a></li>
+  </ul>
+
+  <h2>瀏覽器收到的 &lt;script&gt;</h2>
+  <%# 這裡用跳脫輸出（等號）顯示，只是為了讓你看到下面那段 script 實際長什麼樣子 %>
+  <pre>&lt;script&gt;
+  const name = '<%= name %>';
+&lt;/script&gt;</pre>
+
+  <h2>name 的值</h2>
+  <pre id="output"></pre>
+
+  <%# 文章裡的寫法：減號輸出不做任何跳脫，原樣放進 JavaScript 字串 %>
+  <script nonce="demo">
+    const name = '<%- name %>';
+  </script>
+
+  <script nonce="demo">
+    document.querySelector('#output').textContent = name;
+  </script>
+</body>
+</html>

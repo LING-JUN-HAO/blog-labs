@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>從 HTML 屬性進行 XSS 攻擊</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; }
+    pre { background: #f4f4f4; padding: .75rem; white-space: pre-wrap; word-break: break-all; }
+    #content { border: 2px dashed #999; padding: 1rem; }
+    #content :focus { outline: 3px solid #e33; }
+    .container { color: #2a7; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <p><a href="./">← 回目錄</a></p>
+  <h1>從 HTML 屬性進行 XSS 攻擊</h1>
+
+  <ul>
+    <li>正常值：<a href="?clazz=container">container</a></li>
+    <li>攻擊：<a href="?clazz=%22%20tabindex%3D1%20onfocus%3D%22alert(1)%22%20x%3D%22">" tabindex=1 onfocus="alert(1)" x="</a></li>
+  </ul>
+
+  <div id="content"></div>
+  <p>按 <kbd>Tab</kbd> 讓 Demo 取得焦點。</p>
+
+  <h2>產生出來的 HTML</h2>
+  <pre id="output"></pre>
+
+  <script nonce="demo">
+    const clazz = new URLSearchParams(location.search).get('clazz');
+
+    document.querySelector('#content').innerHTML =
+      `<div class="${clazz}">Demo</div>`;
+
+    // 把結果原樣印出來對照（textContent 不會被當成 HTML 解析）
+    document.querySelector('#output').textContent =
+      document.querySelector('#content').innerHTML;
+
+    // 實驗頁面專用，不是文章的程式：
+    // alert 關掉後焦點會回到 Demo，onfocus 又再觸發一次，變成無限迴圈。
+    // 等 onfocus 跑完（alert 關掉）就把焦點移走，只觸發一次。
+    document.querySelector('#content').addEventListener('focusin', (event) => {
+      event.target.blur();
+    });
+  </script>
+</body>
+</html>

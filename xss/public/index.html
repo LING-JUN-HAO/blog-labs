@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <title>XSS 實驗</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 760px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>XSS 實驗</h1>
+
+    <ul>
+      <li><a href="attribute.html">從 HTML 屬性進行 XSS 攻擊</a></li>
+      <li><a href="javascript-url.html">javascript: 偽協議</a></li>
+      <li><a href="content.html">從 HTML 內容進行 XSS 攻擊</a></li>
+      <li><a href="javascript">從 JavaScript 程式碼進行 XSS 攻擊</a></li>
+      <li>
+        <a href="http://localhost:4200">Angular 的 XSS 防護</a>（另外在
+        <code>angular/</code> 執行 <code>npm start</code>）
+      </li>
+    </ul>
+  </body>
+</html>
