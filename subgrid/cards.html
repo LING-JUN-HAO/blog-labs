@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>三張內容長度不同的卡片</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+
+  </style>
+</head>
+<body>
+<main>
+  <nav><a href="index.html">← 回到目錄</a></nav>
+  <h1>三張內容長度不同的卡片</h1>
+  <p class="note">卡片只有外層 Grid，還沒有任何對齊處理。外層 Grid 讓同一排的卡片等高，但內容都擠在上方，連結區域也沒有貼齊底部。</p>
+
+  <div class="demo">
+    <section class="demo__preview" aria-labelledby="preview-title">
+      <h2 class="demo__label" id="preview-title">Demo</h2>
+      <div class="cards">
+    <!-- 卡片 1 -->
+    <article class="card">
+      <h2 class="card__title">入門方案</h2>
+      <p class="card__content">
+        適合剛開始建立個人網站的使用者。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 2 -->
+    <article class="card">
+      <h2 class="card__title">適合多人協作與內容管理的進階方案</h2>
+      <p class="card__content">
+        提供權限管理、版本記錄與更多儲存空間，適合需要一起維護內容的團隊。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 3 -->
+    <article class="card">
+      <h2 class="card__title">企業方案</h2>
+      <p class="card__content">
+        提供進階安全設定與專屬支援。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+      </div>
+    </section>
+    <aside class="demo__code" aria-labelledby="code-title">
+      <h2 class="demo__label" id="code-title">CSS</h2>
+      <pre><code>.cards {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  border: 1px solid #d7d7d7;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card &gt; * {
+  margin: 0;
+  padding: 1rem;
+}</code></pre>
+    </aside>
+  </div>
+</main>
+</body>
+</html>

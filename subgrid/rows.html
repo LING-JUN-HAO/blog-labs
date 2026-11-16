@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>每一排的卡片會各自對齊</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .card {
+      display: grid;
+      grid-row: span 3;
+      grid-template-rows: subgrid;
+      gap: 0;
+    }
+
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .cards {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <nav><a href="index.html">← 回到目錄</a></nav>
+  <h1>每一排的卡片會各自對齊</h1>
+  <p class="note">六張卡片，寬螢幕三欄、中等寬度兩欄、窄螢幕一欄。只有同一排的卡片互相對齊。第一排的進階方案標題換成兩行，只會撐高第一排的標題列，第二排的標題列不受影響；第二排「教育方案」較長的中間內容也不會把第一排撐高。調整視窗寬度看看分組怎麼變。</p>
+
+  <div class="demo">
+    <section class="demo__preview" aria-labelledby="preview-title">
+      <h2 class="demo__label" id="preview-title">Demo</h2>
+      <div class="cards">
+    <!-- 卡片 1 -->
+    <article class="card">
+      <h2 class="card__title">入門方案</h2>
+      <p class="card__content">
+        適合剛開始建立個人網站的使用者。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 2 -->
+    <article class="card">
+      <h2 class="card__title">適合多人協作與內容管理的進階方案</h2>
+      <p class="card__content">
+        提供權限管理、版本記錄與更多儲存空間，適合需要一起維護內容的團隊。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 3 -->
+    <article class="card">
+      <h2 class="card__title">企業方案</h2>
+      <p class="card__content">
+        提供進階安全設定與專屬支援。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 4 -->
+    <article class="card">
+      <h2 class="card__title">教育方案</h2>
+      <p class="card__content">
+        提供學校與教學單位使用的帳號管理，以及課堂作業的繳交與批改功能，學期結束後可以一鍵封存。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 5 -->
+    <article class="card">
+      <h2 class="card__title">非營利組織方案</h2>
+      <p class="card__content">
+        免費提供基本功能。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 6 -->
+    <article class="card">
+      <h2 class="card__title">客製化方案</h2>
+      <p class="card__content">
+        依需求調整。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+      </div>
+    </section>
+    <aside class="demo__code" aria-labelledby="code-title">
+      <h2 class="demo__label" id="code-title">CSS</h2>
+      <pre><code>.card {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  gap: 0;
+}
+
+@media (max-width: 900px) {
+  .cards {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}</code></pre>
+    </aside>
+  </div>
+</main>
+</body>
+</html>

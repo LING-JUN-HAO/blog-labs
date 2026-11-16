@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>巢狀 Grid 為什麼對不齊？</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .comparison {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 2fr) max-content minmax(0, 1fr);
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid #d7d7d7;
+      border-radius: 0.5rem;
+      background: #fff;
+    }
+
+    .layout__item,
+    .nested__item {
+      min-width: 0;
+      padding: 1rem 0.5rem;
+      border-radius: 0.25rem;
+      text-align: center;
+    }
+
+    .layout__item {
+      color: #17406f;
+      background: #e8f1ff;
+    }
+
+    .nested {
+      display: grid;
+      grid-column: 1 / -1;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 2px dashed #aab4c0;
+    }
+
+    .nested__item {
+      color: #684f00;
+      background: #fff1b8;
+    }
+
+    .nested--independent {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .nested--subgrid {
+      grid-template-columns: subgrid;
+    }
+
+    .nested--subgrid > * {
+      grid-column: span 2;
+    }
+
+    .example-title {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+    }
+
+    .example-note {
+      margin: 0 0 1rem;
+      color: #555;
+    }
+
+    @media (max-width: 620px) {
+      .layout {
+        gap: 0.5rem;
+        padding: 0.75rem;
+      }
+
+      .nested {
+        gap: 0.5rem;
+      }
+
+      .layout__item,
+      .nested__item {
+        padding-inline: 0.25rem;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <nav><a href="index.html">← 回到目錄</a></nav>
+  <h1>巢狀 Grid 為什麼對不齊？</h1>
+  <p class="note">父層的標籤欄由內容決定寬度，另外兩欄分別占 2fr 與 1fr。比較一般巢狀 Grid 與 Subgrid，可以看到子層是否真正沿用父層軌道。</p>
+
+  <div class="demo">
+    <section class="demo__preview" aria-labelledby="preview-title">
+      <h2 class="demo__label" id="preview-title">Demo</h2>
+      <div class="comparison">
+        <section>
+          <h3 class="example-title">一般巢狀 Grid</h3>
+          <p class="example-note">子層重新均分成兩欄，分隔線只落在整體寬度的中間。</p>
+          <div class="layout">
+            <div class="layout__item">名稱</div>
+            <div class="layout__item">個人網站改版</div>
+            <div class="layout__item">預計完成日期</div>
+            <div class="layout__item">12 月 31 日</div>
+            <div class="nested nested--independent">
+              <div class="nested__item">設計階段</div>
+              <div class="nested__item">開發階段</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3 class="example-title">使用 Subgrid</h3>
+          <p class="example-note">兩個項目各跨兩條父層軌道，分隔線和父層格線一致。</p>
+          <div class="layout">
+            <div class="layout__item">名稱</div>
+            <div class="layout__item">個人網站改版</div>
+            <div class="layout__item">預計完成日期</div>
+            <div class="layout__item">12 月 31 日</div>
+            <div class="nested nested--subgrid">
+              <div class="nested__item">設計階段（跨 2 欄）</div>
+              <div class="nested__item">開發階段（跨 2 欄）</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <aside class="demo__code" aria-labelledby="code-title">
+      <h2 class="demo__label" id="code-title">CSS</h2>
+      <pre><code>.layout {
+  display: grid;
+  grid-template-columns:
+    max-content 2fr max-content 1fr;
+  gap: 1rem;
+}
+
+/* 一般巢狀 Grid：重新建立軌道 */
+.nested {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* Subgrid：沿用父層軌道 */
+.nested {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
+.nested > * {
+  grid-column: span 2;
+}</code></pre>
+    </aside>
+  </div>
+</main>
+</body>
+</html>

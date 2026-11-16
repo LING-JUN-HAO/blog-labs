@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flexbox 可以讓連結區域對齊</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card__content {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <nav><a href="index.html">← 回到目錄</a></nav>
+  <h1>Flexbox 可以讓連結區域對齊</h1>
+  <p class="note"><code>flex: 1</code> 讓中間內容填滿剩餘空間，三個連結區域都貼齊底部。第二張卡片的標題換成兩行，中間內容的起點就比另外兩張晚。</p>
+
+  <div class="demo">
+    <section class="demo__preview" aria-labelledby="preview-title">
+      <h2 class="demo__label" id="preview-title">Demo</h2>
+      <div class="cards">
+    <!-- 卡片 1 -->
+    <article class="card">
+      <h2 class="card__title">入門方案</h2>
+      <p class="card__content">
+        適合剛開始建立個人網站的使用者。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 2 -->
+    <article class="card">
+      <h2 class="card__title">適合多人協作與內容管理的進階方案</h2>
+      <p class="card__content">
+        提供權限管理、版本記錄與更多儲存空間，適合需要一起維護內容的團隊。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+
+    <!-- 卡片 3 -->
+    <article class="card">
+      <h2 class="card__title">企業方案</h2>
+      <p class="card__content">
+        提供進階安全設定與專屬支援。
+      </p>
+      <footer class="card__footer">
+        <a href="#">查看方案</a>
+      </footer>
+    </article>
+      </div>
+    </section>
+    <aside class="demo__code" aria-labelledby="code-title">
+      <h2 class="demo__label" id="code-title">CSS</h2>
+      <pre><code>.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card__content {
+  flex: 1;
+}</code></pre>
+    </aside>
+  </div>
+</main>
+</body>
+</html>
