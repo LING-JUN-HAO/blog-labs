@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title><%= title %> - CSP 實驗</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <p><a href="/">← 回目錄</a></p>
+  <h1><%= title %></h1>
+
+  <p>
+    <code>frame-ancestors</code> 不是寫在「嵌入別人」的頁面，而是由<strong>被嵌入的頁面</strong>送出，決定誰可以把自己放進 iframe。
+    下面六格嵌入的都是同一個 <code>/framed</code>，只差在它回應時送出的 Header，以及是誰在嵌入它。
+  </p>
+
+  <div class="fa-grid">
+    <div></div>
+    <% for (const s of settings) { %>
+      <div class="fa-col">
+        <strong><%= s.label %></strong>
+        <code class="fa-header"><%= s.csp ? `Content-Security-Policy: ${s.csp}` : '（沒有 CSP）' %></code>
+      </div>
+    <% } %>
+
+    <div class="fa-row">
+      <strong>本站嵌入</strong>
+      <span><%= SELF %></span>
+    </div>
+    <% for (const s of settings) { %>
+      <figure class="fa-cell" data-cell="self-<%= s.key %>">
+        <iframe src="/framed?fa=<%= s.key %>&from=self" title="本站嵌入：<%= s.label %>"></iframe>
+        <figcaption class="fa-result pending">檢查中…</figcaption>
+      </figure>
+    <% } %>
+
+    <div class="fa-row">
+      <strong>其他網站嵌入</strong>
+      <span><%= OTHER %></span>
+    </div>
+    <% for (const s of settings) { %>
+      <figure class="fa-cell other" data-cell="other-<%= s.key %>">
+        <iframe src="<%= OTHER %>/embed?fa=<%= s.key %>" title="其他網站嵌入：<%= s.label %>"></iframe>
+        <figcaption class="fa-result pending">檢查中…</figcaption>
+      </figure>
+    <% } %>
+  </div>
+
+  <p class="fa-note">
+    「其他網站嵌入」那排的紅色虛線框是 <code><%= OTHER %>/embed</code> 的頁面，它裡面再嵌入 <code><%= SELF %>/framed</code>。
+    <code>'self'</code> 要求<strong>每一層</strong>上層頁面都跟自己同源，中間隔了一層 8081 就不行。
+  </p>
+
+  <h2>怎麼看</h2>
+  <ul>
+    <li><strong>沒有設定</strong>：任何網站都能嵌入。攻擊者可以把你的頁面放進透明 iframe，疊在誘餌按鈕上，騙使用者點擊（Clickjacking）。</li>
+    <li><strong><code>'self'</code></strong>：只有同源的頁面能嵌入，適合自己網站內需要 iframe 的情況。</li>
+    <li><strong><code>'none'</code></strong>：誰都不能嵌入，連自己也不行。</li>
+  </ul>
+  <p>
+    被擋下的 iframe 會顯示瀏覽器的錯誤畫面，Console 會出現 <code>Refused to frame ... frame-ancestors</code>。
+    格子下方的結果是 <code>/framed</code> 載入後用 <code>postMessage</code> 回報的，兩秒內沒收到就當作被擋。
+  </p>
+
+  <script src="/js/frame-ancestors.js"></script>
+</body>
+</html>

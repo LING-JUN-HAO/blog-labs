@@ -1,0 +1,20 @@
+<%# 每種 mode 一個 iframe 並排；iframe 載入 ?mode=xxx，那次回應才送出對應的 CSP %>
+<div class="compare-tools">
+  <p class="compare-hint">
+    CSP 是<strong>伺服器回應時</strong>附在 Response Header 裡的，不是請求帶上去的。每欄頂端印的就是那一欄收到的 Header；
+    要看瀏覽器實際收到的原始 Header：DevTools → Network → 點 <code><%= view %>?mode=…</code> → Headers → Response Headers。
+  </p>
+  <button type="button" id="clear-all">清除所有欄位的紀錄</button>
+</div>
+<div class="compare-grid" style="--cols: <%= Object.keys(modes).length %>">
+  <% for (const [key, m] of Object.entries(modes)) { %>
+    <section class="compare-col">
+      <h2 class="compare-label"><%= m.label %></h2>
+      <iframe src="/<%= view %>?mode=<%= key %>" title="<%= m.label %>"></iframe>
+      <p class="compare-links">
+        <a href="/<%= view %>?mode=<%= key %>" target="_blank">單獨開啟</a>
+        <button type="button" class="reload">重新載入</button>
+      </p>
+    </section>
+  <% } %>
+</div>

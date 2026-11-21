@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>
+    兩欄都把同一段使用者輸入 <code>&lt;b&gt;Hello&lt;/b&gt;&lt;img src="invalid" onerror="…"&gt;</code> 用四種方式寫進 <code>innerHTML</code>，
+    每種方式各有一個框，載入後自動執行。
+  </p>
+
+  <%- include('partials/compare') %>
+
+  <table>
+    <tr><th>寫法</th><th>沒有 Trusted Types</th><th><code>require-trusted-types-for 'script'</code></th></tr>
+    <tr><td>直接指定字串</td><td>寫入，<code>onerror</code> 執行</td><td>丟出 <code>TypeError</code>，什麼都沒寫入</td></tr>
+    <tr><td><code>app-policy</code>（DOMPurify）</td><td>Hello 變粗體，<code>onerror</code> 被拿掉</td><td>同左</td></tr>
+    <tr><td><code>bad-policy</code>（直接回傳）</td><td>寫入，<code>onerror</code> 執行</td><td>危險內容一樣被包成 <code>TrustedHTML</code>，<code>onerror</code> 執行</td></tr>
+    <tr><td>沒列在 <code>trusted-types</code> 的 policy</td><td>建立成功</td><td>丟出 <code>TypeError</code></td></tr>
+  </table>
+  <p>
+    Trusted Types 不會幫忙清理內容，它只確保寫入危險 API 的地方一定經過 policy。
+    <code>trusted-types</code> 多列了 <code>dompurify</code>，因為 DOMPurify 會建立自己的 policy 來解析 HTML。
+    這頁沒有設定 <code>script-src</code>，才看得到 <code>bad-policy</code> 讓 <code>onerror</code> 執行的結果。
+  </p>
+<% } else { %>
+  <div class="tt-cases">
+    <div><p class="small">直接指定字串</p><div class="tt-out" data-case="raw"></div></div>
+    <div><p class="small">app-policy（DOMPurify）</p><div class="tt-out" data-case="app"></div></div>
+    <div><p class="small">bad-policy（直接回傳）</p><div class="tt-out" data-case="bad"></div></div>
+  </div>
+<% } %>
+<%- include('partials/footer', { scripts: ['/vendor/purify.min.js', '/js/trusted-types.js'] }) %>

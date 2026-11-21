@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>
+    三欄都被注入同一個 <code>&lt;img onerror&gt;</code>，政策都是 <code>script-src 'self'</code>，差在用 Report-Only 還是正式 Header、報告怎麼送。
+    每欄下方的表格是伺服器（<code>/csp-reports</code>）收到、屬於這一欄的報告，每兩秒更新。
+  </p>
+
+  <%- include('partials/compare') %>
+
+  <ul>
+    <li><strong>Report-Only</strong>：<code>onerror</code> 照樣執行（紅色），同時產生違規，結果顯示「回報（沒有擋）」。</li>
+    <li><strong>正式 Content-Security-Policy</strong>：<code>onerror</code> 被擋，一樣送出報告。</li>
+    <li>同時有 <code>report-to</code> 與 <code>report-uri</code> 時，支援 Reporting API 的瀏覽器只用 <code>report-to</code>，
+      Chrome 會把報告累積一段時間才批次送出，本機實測等了幾分鐘都不一定會出現；
+      只有 <code>report-uri</code> 的那欄會馬上收到。</li>
+    <li>Report-Only 模式下，Chrome 對同一個 <code>onerror</code> 會回報兩次違規，正式模式只有一次。</li>
+  </ul>
+<% } else { %>
+  <%- include('partials/snippet', { kind: 'injected', html: `
+<img src="invalid" alt="壞掉的圖片" onerror="hit('onerror 執行了')">
+` }) %>
+
+  <p class="log-title">伺服器收到的報告</p>
+  <table class="reports">
+    <thead><tr><th>時間</th><th>送法</th><th>directive</th><th>disposition</th></tr></thead>
+    <tbody id="reports"></tbody>
+  </table>
+<% } %>
+<%- include('partials/footer', { scripts: ['/js/report-only.js'] }) %>

@@ -1,0 +1,25 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>
+    Header 裡的 hash 是伺服器對頁面自己那段行內 script 的完整內容（<code>&lt;script&gt;</code> 與 <code>&lt;/script&gt;</code> 之間，包含換行與空白）算出來的 SHA-256。
+    每欄也都有一段攻擊者注入的行內 script。
+  </p>
+
+  <%- include('partials/compare') %>
+
+  <ul>
+    <li><strong>內容與 hash 相符</strong>：頁面自己的 script 執行；注入的 script 內容不同、hash 對不上，被擋。</li>
+    <li><strong>內容多一個空白</strong>：<code>ok(</code> 變成 <code>ok( </code>，hash 就對不上，頁面自己的 script 也被擋（兩行藍色）。
+      單獨開啟那一欄看 Console，Chrome 會告訴你這段內容實際的 hash。</li>
+  </ul>
+<% } else { %>
+  <div class="snippet own">
+    <pre class="code">&lt;script&gt;<%= script %>&lt;/script&gt;</pre>
+    <script><%- script %></script>
+  </div>
+
+  <%- include('partials/snippet', { kind: 'injected', html: `
+<script>hit('注入的行內 script 執行了')</script>
+` }) %>
+<% } %>
+<%- include('partials/footer') %>

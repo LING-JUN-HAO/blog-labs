@@ -1,0 +1,18 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>攻擊者把下面這張圖片塞進頁面，圖片載入失敗就會執行 <code>onerror</code>。三欄是同一份 HTML，只差在伺服器送出的 CSP。</p>
+  <pre>&lt;img src="invalid" onerror="hit('onerror 執行了：' + document.domain)"&gt;</pre>
+
+  <%- include('partials/compare') %>
+
+  <ul>
+    <li><strong>沒有 CSP</strong>：出現紅色那行，攻擊成功。</li>
+    <li><strong><code>script-src 'self'</code></strong>：<code>onerror</code> 還在 DOM 裡，但沒有執行（藍色那行）；本站的 <code>lab.js</code> 照樣執行。</li>
+    <li><strong><code>script-src self</code></strong>：少了引號，<code>self</code> 被當成一個叫 self 的網域，連本站的 <code>lab.js</code> 都被擋，停在紅底提示，結果也是空的。</li>
+  </ul>
+<% } else { %>
+  <%- include('partials/snippet', { kind: 'injected', html: `
+<img src="invalid" alt="壞掉的圖片" onerror="hit('onerror 執行了：' + document.domain)">
+` }) %>
+<% } %>
+<%- include('partials/footer') %>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title><%= title %> - CSP 實驗</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/js/lab.js"></script>
+
+  <%# <meta> 之前的行內 script：還沒有 CSP，會執行 %>
+  <script>ok('<meta> 之前的行內 script 執行了')</script>
+
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self'; frame-ancestors 'none'">
+
+  <%# <meta> 之後的行內 script：被擋 %>
+  <script>hit('<meta> 之後的行內 script 執行了')</script>
+</head>
+<% if (framed) { %>
+<%# 被自己用 iframe 嵌入的那份：只顯示一句話 %>
+<body class="framed">
+  <p class="framed-title">✓ 這一頁被 iframe 嵌入，照樣顯示出來了</p>
+  <p class="framed-meta"><code>&lt;meta&gt;</code> 裡的 <code>frame-ancestors 'none'</code> 沒有作用</p>
+</body>
+<% } else { %>
+<body>
+  <p><a href="/">← 回目錄</a></p>
+  <h1><%= title %></h1>
+
+  <p>這頁沒有送 CSP Header，政策寫在 <code>&lt;head&gt;</code> 的中間：</p>
+  <pre>&lt;script&gt;ok('&lt;meta&gt; 之前的行內 script 執行了')&lt;/script&gt;
+
+&lt;meta http-equiv="Content-Security-Policy" content="script-src 'self'; frame-ancestors 'none'"&gt;
+
+&lt;script&gt;hit('&lt;meta&gt; 之後的行內 script 執行了')&lt;/script&gt;</pre>
+
+  <p id="lab-status" class="status bad">lab.js 沒有執行</p>
+
+  <div class="log-head">
+    <p class="log-title">結果</p>
+    <button type="button" id="clear-log">清除紀錄</button>
+  </div>
+  <ul id="log" class="log"></ul>
+
+  <p class="log-title">用 iframe 嵌入這一頁</p>
+  <iframe src="/meta?framed" title="嵌入這一頁" class="meta-frame"></iframe>
+
+  <ul>
+    <li><code>&lt;meta&gt;</code> 只對它後面的內容生效：前面那段執行了（綠色），後面那段被擋（藍色）。</li>
+    <li><code>frame-ancestors</code> 寫在 <code>&lt;meta&gt;</code> 裡沒有作用，Console 會出現警告；上面的 iframe 嵌入這一頁，照樣顯示得出來。</li>
+    <li><code>&lt;meta&gt;</code> 也不支援 <code>report-uri</code>、<code>report-to</code>，不能用來設定 Report-Only。能改 Header 時優先用 Header。</li>
+  </ul>
+</body>
+<% } %>
+</html>

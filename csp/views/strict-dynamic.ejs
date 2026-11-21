@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>每欄都有一段帶 nonce 的行內 script（模擬分析工具的載入程式），它會動態建立另一個 <code>&lt;script&gt;</code> 載入 <code>/js/widget.js</code>：</p>
+  <pre>const s = document.createElement('script');
+s.src = '/js/widget.js';
+document.head.append(s);</pre>
+  <p>另外攻擊者把同一個檔案直接寫進 HTML，沒有 nonce。</p>
+
+  <%- include('partials/compare') %>
+
+  <ul>
+    <li><strong>只有 nonce</strong>：載入程式執行了，但它建立的 <code>widget.js</code> 沒有 nonce，被擋。</li>
+    <li><strong>加上 <code>'strict-dynamic'</code></strong>：信任傳給載入程式建立的 <code>widget.js</code>，執行了。</li>
+    <li>兩種情況下，直接寫在 HTML 裡的 <code>&lt;script src&gt;</code> 都被擋：<code>'strict-dynamic'</code> 只信任「已被信任的 script 動態建立的」程式碼。
+      加上 <code>'strict-dynamic'</code> 後，<code>'self'</code> 和網域白名單也會被忽略。</li>
+  </ul>
+<% } else { %>
+  <%- include('partials/snippet', { kind: 'own', html: `
+<script nonce="${nonce}">
+  ok('帶有 nonce 的載入程式執行了');
+  const s = document.createElement('script');
+  s.src = '${SELF}/js/widget.js';
+  document.head.append(s);
+</script>
+` }) %>
+
+  <%- include('partials/snippet', { kind: 'injected', html: `
+<script src="${SELF}/js/widget.js?injected"></script>
+` }) %>
+<% } %>
+<%- include('partials/footer') %>

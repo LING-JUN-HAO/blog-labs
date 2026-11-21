@@ -1,0 +1,15 @@
+<% if (compare) { %>
+  <script src="/js/compare.js"></script>
+<% } else { %>
+  <div class="log-head">
+    <p class="log-title">結果</p>
+    <button type="button" id="clear-log">清除紀錄</button>
+  </div>
+  <ul id="log" class="log"></ul>
+
+<% for (const src of (locals.scripts ?? [])) { %>
+  <script src="<%= SELF %><%= src %>" nonce="<%= nonce %>"></script>
+<% } %>
+<% } %>
+</body>
+</html>

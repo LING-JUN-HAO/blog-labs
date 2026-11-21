@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>
+    nonce 是伺服器每次回應都重新產生的隨機值，Header 與 <code>&lt;script nonce&gt;</code> 對得上才會執行。
+    每欄有一段頁面自己帶正確 nonce 的行內 script，以及攻擊者注入的三種內容：沒有 nonce 的 script、猜 <code>nonce="demo"</code> 的 script、<code>onerror</code>。
+  </p>
+
+  <%- include('partials/compare') %>
+
+  <ul>
+    <li><strong>每次換新的 nonce</strong>：只有頁面自己的 script 執行，注入的三個都被擋。按「重新載入」，Header 裡的 nonce 會變。</li>
+    <li><strong>寫死的 nonce</strong>：攻擊者猜中 <code>demo</code>，那段 script 就執行了。nonce 一定要無法預測、每次回應都不同。</li>
+    <li><code>onerror</code> 這類行內事件處理器沒辦法帶 nonce，兩種情況都被擋。</li>
+  </ul>
+<% } else { %>
+  <%- include('partials/snippet', { kind: 'own', html: `
+<script nonce="${nonce}">
+  window.__APP_CONFIG__ = { apiBase: '/api' };
+  ok('帶有正確 nonce 的行內 script 執行了');
+</script>
+` }) %>
+
+  <%- include('partials/snippet', { kind: 'injected', html: `
+<script>hit('沒有 nonce 的 script 執行了')</script>
+<script nonce="demo">hit('猜 nonce="demo" 的 script 執行了')</script>
+<img src="invalid" alt="壞掉的圖片" onerror="hit('onerror 執行了')">
+` }) %>
+<% } %>
+<%- include('partials/footer') %>

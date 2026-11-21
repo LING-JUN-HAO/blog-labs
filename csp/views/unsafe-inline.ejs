@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>
+    <code>script-src</code> 會擋下行內 <code>&lt;script&gt;</code>、<code>onclick</code>、<code>onerror</code> 和 <code>javascript:</code> URL。
+    每欄都注入這四種；<code>onerror</code> 與行內 script 會自動執行，<code>onclick</code>、<code>javascript:</code> 連結要自己點。
+    載入時也會由本站的外部 JavaScript 呼叫一次 <code>eval("1 + 1")</code>。
+  </p>
+
+  <%- include('partials/compare') %>
+
+  <ul>
+    <li><strong><code>script-src 'self'</code></strong>：注入的全部被擋；<code>eval()</code> 丟出 <code>EvalError</code>。</li>
+    <li><strong>加上 <code>'unsafe-inline'</code></strong>：注入的全部執行，CSP 對 XSS 等於沒有作用。</li>
+    <li><strong>加上 <code>'unsafe-eval'</code></strong>：注入的一樣被擋，但 <code>eval()</code> 可以執行；被注入的程式只要呼叫得到 <code>eval()</code>，就能把任意字串當成程式碼執行。</li>
+  </ul>
+<% } else { %>
+  <%- include('partials/snippet', { kind: 'injected', html: `
+<img src="invalid" alt="壞掉的圖片" onerror="hit('onerror 執行了')">
+<script>hit('行內 script 執行了')</script>
+<p>
+  <button onclick="hit('onclick 執行了')">onclick</button>
+  <a href="javascript:hit('javascript: URL 執行了')">javascript: 連結</a>
+</p>
+` }) %>
+  <div class="buttons"><button id="eval">再執行一次 eval("1 + 1")</button></div>
+<% } %>
+<%- include('partials/footer', { scripts: ['/js/unsafe-inline.js'] }) %>

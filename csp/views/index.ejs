@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>CSP 實驗</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>CSP 實驗</h1>
+  <p>
+    每頁把不同的 CSP 設定並排成好幾欄，每一欄是一個 iframe，載入時伺服器各自送出不同的 CSP Header，一次就能比較。
+    綠色是頁面自己的程式、紅色是注入的程式碼成功執行、藍色是 CSP 擋下或回報的違規。
+    想看 Console 的錯誤訊息，點欄位下方的「單獨開啟」。
+  </p>
+
+  <ul>
+    <li><a href="/basic">CSP 是什麼？</a>（注入的 onerror、少了引號的 'self'）</li>
+    <li><a href="/default-src">default-src 是其他 directive 的預設值</a></li>
+    <li><a href="/base-form">base-uri 與 form-action</a></li>
+    <li><a href="/frame-ancestors">frame-ancestors</a></li>
+    <li><a href="/connect-src">connect-src 和 CORS 有什麼不同？</a></li>
+    <li><a href="/unsafe-inline">為什麼不該直接加上 'unsafe-inline'？</a></li>
+    <li><a href="/nonce">nonce</a></li>
+    <li><a href="/hash">hash</a></li>
+    <li><a href="/strict-dynamic">strict-dynamic</a></li>
+    <li><a href="/trusted-types">Trusted Types</a></li>
+    <li><a href="/report-only">先用 Report-Only 觀察</a></li>
+    <li><a href="/meta">用 &lt;meta&gt; 設定 CSP</a></li>
+  </ul>
+
+  <p><code><%= OTHER %></code> 扮演其他網站：外部 API、外部圖片，以及攻擊者收集資料的地方。</p>
+</body>
+</html>

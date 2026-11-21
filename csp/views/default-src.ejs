@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>沒有設定 <code>img-src</code> 時，圖片會套用 <code>default-src</code>。每欄都載入三張圖：本站、其他網站（<code><%= OTHER %></code>）、<code>data:</code> 網址。</p>
+
+  <%- include('partials/compare') %>
+
+  <ul>
+    <li><strong>沒有 CSP</strong>：三張都顯示。</li>
+    <li><strong><code>default-src 'self'</code></strong>：只剩本站的圖片，其他網站與 <code>data:</code> 都被擋。</li>
+    <li><strong>另外開放 <code>img-src</code></strong>：三張都顯示，<code>img-src</code> 取代了 <code>default-src</code> 對圖片的設定。</li>
+  </ul>
+<% } else { %>
+  <table class="images">
+    <tr>
+      <td>本站</td>
+      <td><img src="<%= SELF %>/img/dot.svg" alt="本站"></td>
+      <td class="img-status">載入中</td>
+    </tr>
+    <tr>
+      <td>其他網站</td>
+      <td><img src="<%= OTHER %>/img/external.svg" alt="其他網站"></td>
+      <td class="img-status">載入中</td>
+    </tr>
+    <tr>
+      <td><code>data:</code></td>
+      <td><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='%23f9a825'/%3E%3C/svg%3E" alt="data:"></td>
+      <td class="img-status">載入中</td>
+    </tr>
+  </table>
+<% } %>
+<%- include('partials/footer', { scripts: ['/js/default-src.js'] }) %>

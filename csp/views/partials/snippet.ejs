@@ -1,0 +1,5 @@
+<%# 同一段 HTML 印兩次：上面是原始碼（看得到藏起來的 <script>），下面是瀏覽器實際解析的結果 %>
+<div class="snippet <%= kind %>">
+  <pre class="code"><%= html.trim() %></pre>
+  <div class="rendered"><%- html %></div>
+</div>

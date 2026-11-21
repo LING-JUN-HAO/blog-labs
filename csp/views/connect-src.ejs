@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+<% if (compare) { %>
+  <p>
+    <code>connect-src</code> 由<strong>目前頁面</strong>決定可以連到哪裡，請求在送出前就被擋下。
+    CORS 由 <strong>API 伺服器</strong>決定誰可以讀它的回應，請求其實已經送到伺服器了。
+    每欄載入後會自動 <code>fetch()</code> 三個 API，下方列出 <code><%= OTHER %></code> 實際收到了哪些請求。
+  </p>
+
+  <%- include('partials/compare') %>
+
+  <table>
+    <tr><th></th><th>同源</th><th>外部（有 CORS）</th><th>外部（沒有 CORS）</th></tr>
+    <tr><td>沒有 CSP</td><td>讀到</td><td>讀到</td><td>讀不到，但 8081 有收到請求</td></tr>
+    <tr><td><code>connect-src 'self'</code></td><td>讀到</td><td>沒送出</td><td>沒送出</td></tr>
+    <tr><td><code>connect-src 'self' <%= OTHER %></code></td><td>讀到</td><td>讀到</td><td>讀不到，但 8081 有收到請求</td></tr>
+  </table>
+  <p>
+    看最後一欄：CORS 擋的是「讀回應」，被注入的程式碼只要把資料放進網址或 body 送出去就夠了，不需要讀回應。
+    要擋住資料外送，靠的是 <code>connect-src</code>。
+  </p>
+<% } else { %>
+  <div class="buttons">
+    <button data-url="<%= SELF %>/api/data">同源</button>
+    <button data-url="<%= OTHER %>/api/cors">外部（有 CORS）</button>
+    <button data-url="<%= OTHER %>/api/no-cors">外部（沒有 CORS）</button>
+  </div>
+
+  <p class="log-title"><%= OTHER %> 收到的請求</p>
+  <ul id="other-log" class="log"></ul>
+<% } %>
+<%- include('partials/footer', { scripts: ['/js/connect-src.js'] }) %>

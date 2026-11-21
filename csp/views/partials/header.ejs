@@ -1,0 +1,30 @@
+<% if (compare) { %>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title><%= title %> - CSP 實驗</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="compare">
+  <p><a href="/">← 回目錄</a></p>
+  <h1><%= title %></h1>
+<% } else { %>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title><%= modes[mode].label %> - <%= title %></title>
+  <%# 全部用外部檔案：default-src 'self' 會擋下行內 <style>，連帶影響頁面樣式 %>
+  <link rel="stylesheet" href="<%= SELF %>/style.css">
+  <%# lab.js 要最早載入，注入的程式碼才呼叫得到 hit()；nonce 在沒有用到 nonce 的頁面上不影響 %>
+  <script src="<%= SELF %>/js/lab.js" nonce="<%= nonce %>"></script>
+</head>
+<body class="demo" data-mode="<%= mode %>">
+  <%# 連結都寫完整網址：base-uri 那頁會被注入 <base>，相對網址會被改走 %>
+  <p class="header-title">伺服器回應這一欄 HTML 時附上的 Response Header</p>
+  <pre class="header"><% if (extraHeaders) { for (const [k, v] of Object.entries(extraHeaders)) { %><%= k %>: <%= v %>
+<% } } %><% if (csp) { %><%= header %>: <%= csp %><% } else { %>（沒有 CSP）<% } %></pre>
+
+  <p id="lab-status" class="status bad">lab.js 沒有執行：本站的外部 JavaScript 也被擋下來了。</p>
+<% } %>
